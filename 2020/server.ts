@@ -1,5 +1,4 @@
 import {serve} from "https://deno.land/std@0.80.0/http/server.ts";
-import enumerate = Reflect.enumerate;
 
 const server = serve({port: 9000});
 
@@ -17,6 +16,7 @@ for await (const req of server) {
 
             const dayModulePath = `./day${day}/script.ts`;
             const dayModule = await import(dayModulePath);
+
             const partToLoad = dayModule[`part${PartMap[parseInt(part) - 1]}`]
 
             const timesToTest = 1;
