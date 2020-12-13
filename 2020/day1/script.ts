@@ -1,4 +1,4 @@
-const script = async() => {
+export const partOne = async() => {
     const target = 2020;
     const expenseRapport: string = await Deno.readTextFile("./day1/input.txt");
     const expenses = expenseRapport
@@ -22,4 +22,6 @@ const script = async() => {
     console.log(`The multiplication of the two expenses are ${expenseMultiplication}`);
 }
 
-export default script;
+export const partTwo = () => {
+    console.log("part two")
+}
