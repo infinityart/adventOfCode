@@ -1,9 +1,5 @@
 {
   "compilerOptions": {
-    "plugins": [{
-      "name": "typescript-deno-plugin",
-      "enable": true,
-      "importmap": "import_map.json"
-    }]
+    "lib": ["ES2015", "DOM", "ES2017"]
   },
 }
