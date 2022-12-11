@@ -1,51 +1,90 @@
 import {newLine, space} from "../../util/regexes.ts";
 
-enum shapes {
-    "rock" = 1,
-    "paper",
-    "scissor",
+enum Shapes {
+    "ROCK" = 1,
+    "PAPER",
+    "SCISSOR",
 }
 
-type EncryptedShapes = typeof encryptedShapes;
 type KeyofEncryptedShapes = keyof EncryptedShapes;
 
-enum encryptedShapes {
-    "A" = shapes.rock,
-    "B" = shapes.paper,
-    "C" = shapes.scissor,
-    "X" = shapes.rock,
-    "Y" = shapes.paper,
-    "Z" = shapes.scissor,
+enum EncryptedShapes {
+    "A" = Shapes.ROCK,
+    "B" = Shapes.PAPER,
+    "C" = Shapes.SCISSOR,
+    "X" = Shapes.ROCK,
+    "Y" = Shapes.PAPER,
+    "Z" = Shapes.SCISSOR,
 }
 
+enum RoundOutcomes {
+    "WIN" = 6,
+    "LOSE" = 0,
+    "DRAW" = 3
+}
+
+enum RoundOutcomesEncrypted {
+    "X" = RoundOutcomes.LOSE,
+    "Y" = RoundOutcomes.DRAW,
+    "Z" = RoundOutcomes.WIN,
+}
+
+const sumPoints = (a: number, b: number) => a + b;
+const getRounds = (input: string) => input.split(newLine);
+
 function decideRoundOutcome(opponent: EncryptedShapes, player: EncryptedShapes) {
-    const usedScissorAndRock = [shapes.scissor, shapes.rock].every(usedShape => [opponent, player].includes(usedShape));
+    const isScissorAndRock = [Shapes.SCISSOR, Shapes.ROCK].every(usedShape => [opponent, player].includes(usedShape));
 
-    if (usedScissorAndRock) {
-        if (player === shapes.rock) return 6;
+    if (isScissorAndRock) {
+        if (player === Shapes.ROCK) return RoundOutcomes.WIN;
 
-        return 0;
+        return RoundOutcomes.LOSE;
     }
 
     const outcome = player - opponent;
 
-    if (outcome === 0) return 3;
-    if (outcome > 0) return 6;
-    if (outcome < 0) return 0;
+    if (outcome === 0) return RoundOutcomes.DRAW;
+    if (outcome > 0) return RoundOutcomes.WIN;
+    if (outcome < 0) return RoundOutcomes.LOSE;
 }
 
-function decidePoints(opponentShape: KeyofEncryptedShapes, playerShape: KeyofEncryptedShapes) {
-    const opponent = encryptedShapes[opponentShape];
-    const player = encryptedShapes[playerShape];
+function decidePointsPart1(opponentShape: KeyofEncryptedShapes, playerShape: KeyofEncryptedShapes) {
+    const opponent = EncryptedShapes[opponentShape];
+    const player = EncryptedShapes[playerShape];
 
     return decideRoundOutcome(opponent, player) + player
 }
 
+function decidePlayerShape(outcome: RoundOutcomes, opponentShape: Shapes) {
+    if (outcome === RoundOutcomes.DRAW) return opponentShape;
+
+    if (opponentShape === Shapes.SCISSOR && outcome === RoundOutcomes.WIN) {
+        return Shapes.ROCK;
+    }
+
+    if (opponentShape === Shapes.ROCK && outcome === RoundOutcomes.LOSE) {
+        return Shapes.SCISSOR
+    }
+
+    if (outcome === RoundOutcomes.WIN) return opponentShape + 1;
+    if (outcome === RoundOutcomes.LOSE) return opponentShape - 1;
+}
+
+function decidePointsPart2(opponentShape: KeyofEncryptedShapes, playerShape: KeyofEncryptedShapes) {
+    const opponent = EncryptedShapes[opponentShape];
+    const outcome = RoundOutcomesEncrypted[playerShape];
+
+    return decidePlayerShape(outcome, opponent) + outcome;
+}
+
 export function part1(input: string) {
-    const sumPoints = (a: number, b: number) => a + b;
-    const rounds = input.split(newLine);
-    
-    return rounds
-        .map(round => decidePoints(...round.split(space)))
+    return rounds()
+        .map(round => decidePointsPart1(...round.split(space)))
+        .reduce(sumPoints, 0);
+}
+
+export function part2(input: string) {
+    return rounds()
+        .map(round => decidePointsPart2(...round.split(space)))
         .reduce(sumPoints, 0);
 }
