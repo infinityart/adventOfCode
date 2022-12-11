@@ -1,7 +1,7 @@
 const [year, day, part] = Deno.args;
 
 const modulePath = `./${year}/day-${day}`;
-const inputPath = `${modulePath}/part-1-input.txt`;
+const inputPath = `${modulePath}/input.txt`;
 
 const dayModule = await import(`${modulePath}/index.ts`);
 
