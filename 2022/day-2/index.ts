@@ -78,13 +78,13 @@ function decidePointsPart2(opponentShape: KeyofEncryptedShapes, playerShape: Key
 }
 
 export function part1(input: string) {
-    return rounds()
+    return getRounds(input)
         .map(round => decidePointsPart1(...round.split(space)))
         .reduce(sumPoints, 0);
 }
 
 export function part2(input: string) {
-    return rounds()
+    return getRounds(input)
         .map(round => decidePointsPart2(...round.split(space)))
         .reduce(sumPoints, 0);
 }
