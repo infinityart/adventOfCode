@@ -1,7 +1,12 @@
-const [year, day, part] = Deno.args;
+import {parse} from "https://deno.land/std@0.166.0/flags/mod.ts";
+
+const {_: [year, day, part], test} = parse(Deno.args, {
+    boolean: ["test"]
+});
 
 const modulePath = `./${year}/day-${day}`;
-const inputPath = `${modulePath}/input.txt`;
+const inputType = test ? "test" : "input";
+const inputPath = `${modulePath}/${inputType}.txt`;
 
 const dayModule = await import(`${modulePath}/index.ts`);
 
