@@ -30,7 +30,7 @@ enum RoundOutcomesEncrypted {
 }
 
 const sumPoints = (a: number, b: number) => a + b;
-const getRounds = (input: string) => input.split(newLine);
+const getRounds = (input: string) => input.trim().split(newLine);
 
 function decideRoundOutcome(opponent: EncryptedShapes, player: EncryptedShapes) {
     const isScissorAndRock = [Shapes.SCISSOR, Shapes.ROCK].every(usedShape => [opponent, player].includes(usedShape));

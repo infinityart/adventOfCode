@@ -3,7 +3,7 @@ import {emptyLine, newLine} from "../../util/regexes.ts";
 function getCaloriesPerElf(input: string) {
     const countTotalCalories = (a, b) => parseInt(a) + parseInt(b);
 
-    const caloriePerElfList = input.split(emptyLine);
+    const caloriePerElfList = input.trim().split(emptyLine);
 
     return caloriePerElfList.map(caloriePerElf => {
         return caloriePerElf

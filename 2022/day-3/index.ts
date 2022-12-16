@@ -25,7 +25,7 @@ interface IterateRucksacks {
 }
 
 function iterateRucksacks(input, jump, separator: IterateRucksacks) {
-    const rucksacks = input.split(newLine);
+    const rucksacks = input.trim().split(newLine);
 
     let priorityCount = 0;
     for (let i = 0; i < rucksacks.length; i += jump) {

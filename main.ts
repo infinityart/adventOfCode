@@ -10,7 +10,7 @@ const inputPath = `${modulePath}/${inputType}.txt`;
 
 const dayModule = await import(`${modulePath}/index.ts`);
 
-const input = Deno.readTextFileSync(inputPath).trim();
+const input = Deno.readTextFileSync(inputPath);
 
 const start = performance.now();
 
