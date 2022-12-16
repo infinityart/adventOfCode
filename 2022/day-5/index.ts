@@ -44,23 +44,34 @@ function sanitizeInstructions(instructionsText: string) {
         });
 }
 
-function moveCrates(stacks: string[], instructions: [number, number, number][]) {
+function moveCrates(stacks: string[], instructions: [number, number, number][], canMoveMultiple: boolean) {
     const reverseString = (str: string) => str.split("").reverse().join("");
+    const moveSingle = (crates: string) => reverseString(crates);
+    const moveMultiple = (crates: string) => crates;
+    const useCrane = canMoveMultiple ? moveMultiple : moveSingle;
 
     instructions.forEach(([move, fromIdx, toIdx]) => {
         const fromStack = stacks[fromIdx];
 
         stacks[fromIdx] = fromStack.slice(0, -move);
-        stacks[toIdx] += reverseString(fromStack.slice(-move));
+        stacks[toIdx] += useCrane(fromStack.slice(-move));
     });
 }
 
-export function part1(input: string) {
+function startCrane(input: string, canMoveMultiple = false) {
     const [startingStacksText, instructionsText] = input.split(emptyLine);
     const stacks = convertToColumns(sanitizeStartingStacks(startingStacksText));
     const instructions = sanitizeInstructions(instructionsText);
 
-    moveCrates(stacks, instructions);
+    moveCrates(stacks, instructions, canMoveMultiple);
 
     return stacks.reduce((sequence, stack) => sequence += stack.slice(-1), "");
+}
+
+export function part1(input: string) {
+    return startCrane(input);
+}
+
+export function part2(input: string) {
+    return startCrane(input, true);
 }
