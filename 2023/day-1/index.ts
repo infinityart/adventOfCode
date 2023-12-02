@@ -1,9 +1,5 @@
 import {newLine} from "../../util/regexes.ts";
 
-console.log(part1(await Bun.file("./input.txt").text()))
-console.log(part2(await Bun.file("./input.txt").text()))
-
-
 type Match = {
     text: string;
     index: number;
