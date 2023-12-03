@@ -7,6 +7,8 @@ type NumberPosition = {
     isIncluded: boolean,
 }
 
+type NumberPositionCollection = Map<number, NumberPosition[]>;
+
 type SymbolPosition = {
     symbol: string,
     xIndex: number,
@@ -14,18 +16,77 @@ type SymbolPosition = {
 }
 
 export function part1(input: string) {
-    const numberPositions: Map<number, NumberPosition[]> = new Map();
+    const [numberPositions, symbolPositions] = parsePositions(input);
+
+    return symbolPositions.reduce((numberSum, symbolPosition) => {
+        const numbers = findNumbers(numberPositions, symbolPosition);
+
+        return numbers.reduce((a, b) => a + b, numberSum)
+    }, 0)
+}
+
+export function part2(input: string) {
+    const [numberPositions, symbolPositions] = parsePositions(input);
+
+    return symbolPositions.reduce((numberSum, symbolPosition) => {
+        if (symbolPosition.symbol !== "*") return numberSum;
+
+        const numbers = findNumbers(numberPositions, symbolPosition);
+
+        if (numbers.length !== 2) return numberSum;
+
+        return numberSum + numbers[0] * numbers[1];
+    }, 0)
+}
+
+function findNumbers(
+    numberPositions: NumberPositionCollection,
+    {
+        xIndex,
+        yIndex
+    }: SymbolPosition
+) {
+    const findByPosition = (x, y) => {
+        const yNumberPositions = numberPositions.get(y);
+
+        const numberPosition = yNumberPositions.find(({startIndex, endIndex}) => {
+            return startIndex <= x && endIndex >= x
+        });
+
+        if (!numberPosition || numberPosition.isIncluded) return;
+
+        numberPosition.isIncluded = true;
+
+        return numberPosition.number
+    };
+
+    const numbers = [
+        findByPosition(xIndex, yIndex - 1),
+        findByPosition(xIndex + 1, yIndex - 1),
+        findByPosition(xIndex + 1, yIndex),
+        findByPosition(xIndex + 1, yIndex + 1),
+        findByPosition(xIndex, yIndex + 1),
+        findByPosition(xIndex - 1, yIndex + 1),
+        findByPosition(xIndex - 1, yIndex),
+        findByPosition(xIndex - 1, yIndex - 1),
+    ];
+
+    return numbers.filter(Number);
+}
+
+function parsePositions(input: string): [Map<number, NumberPosition[]>, SymbolPosition[]] {
+    const numberPositions: NumberPositionCollection = new Map();
     const symbolPositions: SymbolPosition[] = [];
 
     input.split(newLine).forEach((line, index) => {
-        // Matches groups of digits or non-space, non-digit, non-dot characters globally
-        const matches = line.matchAll(/\d+|[^.\d\s]/g);
-
         if (!numberPositions.has(index)) {
             numberPositions.set(index, [])
         }
 
         const numberPosition = numberPositions.get(index);
+
+        // Matches groups of digits or non-space, non-digit, non-dot characters globally
+        const matches = line.matchAll(/\d+|[^.\d\s]/g);
 
         for (const matchList of matches) {
             const match = matchList[0];
@@ -50,32 +111,5 @@ export function part1(input: string) {
         }
     });
 
-    return symbolPositions.reduce((numberSum, {xIndex, yIndex}) => {
-        const findByPosition = (x, y) => {
-            const yNumberPositions = numberPositions.get(y);
-
-            const numberPosition = yNumberPositions.find(({startIndex, endIndex}) => {
-                return startIndex <= x && endIndex >= x
-            });
-
-            if (!numberPosition || numberPosition.isIncluded) return 0;
-
-            numberPosition.isIncluded = true;
-
-            return numberPosition.number
-        };
-
-        const numbers = [
-            findByPosition(xIndex, yIndex - 1),
-            findByPosition(xIndex + 1, yIndex - 1),
-            findByPosition(xIndex + 1, yIndex),
-            findByPosition(xIndex + 1, yIndex + 1),
-            findByPosition(xIndex, yIndex + 1),
-            findByPosition(xIndex - 1, yIndex + 1),
-            findByPosition(xIndex - 1, yIndex),
-            findByPosition(xIndex - 1, yIndex - 1),
-        ];
-
-        return numbers.reduce((a, b) => a + b, numberSum)
-    }, 0)
+    return [numberPositions, symbolPositions]
 }
