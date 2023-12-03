@@ -2,7 +2,7 @@ import {expect, test} from "bun:test";
 import {part1, part2} from "./index.ts";
 
 
-test("day 1 part 1 example", () => {
+test("2023 day-1 part-1 example", () => {
     const exampleText = "1abc2\n" +
         "pqr3stu8vwx\n" +
         "a1b2c3d4e5f\n" +
@@ -14,7 +14,7 @@ test("day 1 part 1 example", () => {
 });
 
 
-test("day 1 part 2 example", () => {
+test("2023 day-1 part-2 example", () => {
     const exampleText = "two1nine\n" +
         "eightwothree\n" +
         "abcone2threexyz\n" +
