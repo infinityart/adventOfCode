@@ -1,5 +1,5 @@
 import {expect, test} from "bun:test";
-import {part1} from "./index.ts";
+import {part1, part2} from "./index.ts";
 
 const exampleText = "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53\n" +
     "Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19\n" +
@@ -10,5 +10,9 @@ const exampleText = "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53\n" +
 
 test("2023 day-4 part-1 example", () => {
     expect(part1(exampleText)).toBe(13)
+});
+
+test("2023 day-4 part-2 example", () => {
+    expect(part2(exampleText)).toBe(30)
 });
 
